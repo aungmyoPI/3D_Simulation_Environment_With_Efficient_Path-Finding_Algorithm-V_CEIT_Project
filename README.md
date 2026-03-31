@@ -93,15 +93,6 @@ Run the program:
 
 ---
 
-## 👥 Authors
-
-- Ma Thoon Thiri Swe — V IT - 12
-- Mg Nay Phone Myint — V IT - 6
-- Mg Hlwan Moe Aung — V IT - 15
-- Mg Aung Myo Pai — V IT - 19
-- Ma Khin Yadanar Win — V IT - 16
-- Mg Kaung Khant Ko Ko — V IT - 4
-
 **Supervisor:** Dr. Thandar Soe, Professor
 
 ---
