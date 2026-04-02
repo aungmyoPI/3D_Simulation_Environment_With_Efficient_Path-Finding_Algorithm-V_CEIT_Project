@@ -60,8 +60,11 @@ This project constructs a custom 3D rendering core to simulate a "Digital Vacuum
 - copy/paste and press enter.
 
 ```bash
+
 winget install Kitware.CMake
 winget install Ninja-build.Ninja
+
+D:
 
 git clone https://github.com/aungmyoPI/Multi-Users_3D_Simulation_Environment_With_Efficient_Path-Finding_Algorithm-V_CEIT_Project.git
 cd Multi-Users_3D_Simulation_Environment_With_Efficient_Path-Finding_Algorithm-V_CEIT_Project
