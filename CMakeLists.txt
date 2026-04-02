@@ -71,3 +71,8 @@ if(UNIX AND NOT APPLE)
     target_link_libraries(MyGame PRIVATE m dl)
 endif()
 
+if(WIN32)
+    # This captures the necessary GCC/Standard library DLLs 
+    # so your friends don't have to set their PATH manually.
+    set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -static-libgcc -static-libstdc++ -static")
+endif()
