@@ -57,8 +57,6 @@ This project constructs a custom 3D rendering core to simulate a "Digital Vacuum
 
 - Open CMD as admin.
 
-- copy/paste and press enter.
-
 - Change to 'D' Drive (Optional)
 ```bash
 D:
@@ -74,7 +72,7 @@ git clone https://github.com/aungmyoPI/Multi-Users_3D_Simulation_Environment_Wit
 cd Multi-Users_3D_Simulation_Environment_With_Efficient_Path-Finding_Algorithm-V_CEIT_Project
 ```
 
--Run the scipt (Download necessary dependencies -> Build the system -> Run the system)
+-Run the script (Download necessary dependencies -> Build the system -> Run the system)
 ```bash
 start
 ```
