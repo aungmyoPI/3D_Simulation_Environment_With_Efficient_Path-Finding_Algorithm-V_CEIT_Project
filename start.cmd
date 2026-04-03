@@ -1,79 +1,52 @@
 @echo off
-setlocal EnableDelayedExpansion
+setlocal
+echo ======================================================
+echo   3D Simulation Environment - Automated Build Tool
+echo ======================================================
 
-:: 1. Force Administrative Privileges
-net session >nul 2>&1
-if %ERRORLEVEL% NEQ 0 (
-    echo [!] ERROR: This setup requires Administrative Privileges.
-    echo [!] Please right-click 'start.cmd' and select 'Run as Administrator'.
+:: 1. Install MSYS2, CMake, and Ninja via winget
+echo [1/4] Ensuring Build Tools are installed...
+winget install Kitware.CMake --silent --accept-source-agreements
+winget install Ninja-build.Ninja --silent --accept-source-agreements
+winget install MSYS2.MSYS2 --silent --accept-source-agreements
+
+:: 2. Install the GCC Compiler INSIDE MSYS2 from Windows CMD
+:: We call MSYS2's bash to run the update and install the compiler
+echo [2/4] Installing C++ Compiler (MinGW-w64)...
+if exist "C:\msys64\usr\bin\bash.exe" (
+    "C:\msys64\usr\bin\bash.exe" -lc "pacman -S --noconfirm mingw-w64-ucrt-x86_64-gcc"
+) else (
+    echo [!] MSYS2 not found at C:\msys64. Please check installation.
     pause
     exit /b
 )
 
-echo ======================================================
-echo    3D Simulation - All-in-One Setup & Build
-echo ======================================================
+:: 3. Configure and Build
+echo [3/4] Running CMake and Ninja...
+:: Add the new compiler path to this session's PATH
+set "PATH=%PATH%;C:\msys64\ucrt64\bin;C:\msys64\usr\bin"
 
-:: 2. Install Tools via Winget
-echo [1/5] Installing Git, CMake, Ninja, and MSYS2...
-for %%i in (Git.Git Kitware.CMake Ninja-build.Ninja MSYS2.MSYS2) do (
-    echo Checking %%i...
-    winget install %%i --silent --accept-source-agreements --upgrade-available
-)
-
-:: 3. Clone the Repository
-echo [2/5] Cloning the Project Repository...
-set "REPO_URL=https://github.com/aungmyoPI/Multi-Users_3D_Simulation_Environment_With_Efficient_Path-Finding_Algorithm-V_CEIT_Project.git"
-set "FOLDER_NAME=Multi-Users_3D_Simulation_Environment_With_Efficient_Path-Finding_Algorithm-V_CEIT_Project"
-
-if not exist "%FOLDER_NAME%" (
-    git clone %REPO_URL%
-) else (
-    echo Project folder already exists. Skipping clone...
-)
-
-:: Move into the project directory
-cd %FOLDER_NAME%
-
-:: 4. Setup C++ Compiler (UCRT64)
-echo [3/5] Configuring Compiler inside MSYS2...
-set "MSYS_PATH=C:\msys64\usr\bin\bash.exe"
-if exist "%MSYS_PATH%" (
-    "%MSYS_PATH%" -lc "pacman -S --noconfirm --needed mingw-w64-ucrt-x86_64-gcc"
-) else (
-    echo [!] MSYS2 installation not found. Please try running the script again.
-    pause
-    exit /b 1
-)
-
-:: 5. Build the Project
-echo [4/5] Preparing the build directory...
-set "PATH=C:\msys64\ucrt64\bin;C:\msys64\usr\bin;%PATH%"
-
-if not exist "build" mkdir build
-
-cmake -S . -B build -G Ninja ^
-  -DCMAKE_C_COMPILER=gcc.exe ^
-  -DCMAKE_CXX_COMPILER=g++.exe
+cmake -B build -G Ninja ^
+  -DCMAKE_C_COMPILER=C:/msys64/ucrt64/bin/gcc.exe ^
+  -DCMAKE_CXX_COMPILER=C:/msys64/ucrt64/bin/g++.exe
 
 if %ERRORLEVEL% NEQ 0 (
-    echo [!] Configuration failed.
+    echo [!] CMake Configuration failed.
     pause
     exit /b %ERRORLEVEL%
 )
 
-echo [5/5] Compiling System...
 ninja -C build
 
-echo.
-echo ======================================================
-echo SETUP COMPLETE!
-echo ======================================================
-echo All dependencies are installed and the system is built.
-echo.
-echo To run the simulation, type:
-echo    cd %FOLDER_NAME%
-echo    .\build\MyGame.exe
-echo ======================================================
+:: 4. Run the Project
+if %ERRORLEVEL% EQU 0 (
+    echo [4/4] Success! Launching MyGame...
+    .\build\MyGame.exe
+) else (
+    echo [!] Build failed.
+)
+
 pause
 endlocal
+
+
